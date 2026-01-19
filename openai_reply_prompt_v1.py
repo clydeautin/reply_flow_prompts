@@ -1,8 +1,15 @@
 from openai import OpenAI
 import os
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv()
 
 # Initialize the client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise RuntimeError("OPENAI_API_KEY not set")
+
+client = OpenAI(api_key=api_key)
 
 SYSTEM_PROMPT = """
 You are acting as a catering assistant for Mad Dumplings, a food truck business.

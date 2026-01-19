@@ -2,12 +2,19 @@ from openai import OpenAI
 import os
 import json
 from pathlib import Path
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv()
+
+# Initialize the client
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise RuntimeError("OPENAI_API_KEY not set")
+
+client = OpenAI(api_key=api_key)
 
 def load_email_from_file(path: str) -> str:
     return Path(path).read_text(encoding="utf-8")
-
-# Initialize the client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 SYSTEM_PROMPT = """
 You are an intelligent email classifier for a restaurant/food truck business called "Mad Dumplings".
@@ -97,18 +104,4 @@ if __name__ == "__main__":
     }
   ]
 
-#   print(f"{'CATEGORY':<20} | {'CONF':<5} | {'SAFE':<5} | {'REASONING'}")
-#   print("-" * 100)
 
-#   for case in test_emails:
-#     result = classify_email(case["text"])
-#     cat = result.get("category", "N/A")
-#     score = result.get("confidence_score", 0.0)
-#     safe = result.get("safe_to_auto_reply", False)
-#     reason = result.get("reasoning", "")
-    
-#     # Simple color coding for terminal
-#     cat_color = "\033[92m" if safe else "\033[91m"
-#     reset = "\033[0m"
-
-#     print(f"{cat_color}{cat:<20}{reset} | {score:<5} | {str(safe):<5} | {reason}")
