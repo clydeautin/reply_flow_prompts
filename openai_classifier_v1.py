@@ -35,6 +35,8 @@ CATEGORIES:
 - "menu_pricing": Questions about specific food items, prices, dietary restrictions (if not a catering request).
 - "job_application": Resumes, asking for work, hiring inquiries.
 - "spam_sales": SEO services, marketing offers, unsolicited sales pitches.
+- "school_event": Requests from schools, PTAs, PTOs, parent-teacher associations, fundraisers,
+  school fairs, carnivals, or student-related events that are NOT private catering.
 - "other": Anything that doesn't fit the above (e.g., complaints, specific complicated questions, personal messages).
 
 CONFIDENCE SCORE GUIDELINES:
@@ -50,7 +52,8 @@ Set "safe_to_auto_reply": true ONLY if ALL of the following are true:
 3. The email is NOT requesting payment or money.
 4. The email is NOT legal or medical in nature.
 5. The email is NOT hostile, threatening, or a serious complaint.
-6. The confidence_score is >= 0.70.
+6. "school_event" emails are NEVER safe to auto-reply.
+7. The confidence_score is >= 0.70.
 
 Otherwise, set "safe_to_auto_reply": false.
 
@@ -97,14 +100,18 @@ if __name__ == "__main__":
     {
       "text": "Can you send me your bank details so I can wire the deposit?",
       "expected": "catering_inquiry (unsafe -> payment info)"
+    },
+    {
+      "text": "Our middle school is planning a fundraiser next month and is looking for food trucks to participate.",
+      "expected": "school_event"
     }
   ]
 
-  # Run the waterfront email file
-  waterfront_email = load_email_from_file("emails/waterfront_thread.txt")
-  result = classify_email(waterfront_email)
-  print("\n--- waterfront_thread.txt ---")
-  print(json.dumps(result, indent=2))
+# Run the waterfront email file
+waterfront_email = load_email_from_file("emails/waterfront_thread.txt")
+result = classify_email(waterfront_email)
+print("\n--- waterfront_thread.txt ---")
+print(json.dumps(result, indent=2))
 
 # Run the hardcoded test
 for i, item in enumerate(test_emails, start=1):
