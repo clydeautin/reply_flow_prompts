@@ -55,7 +55,7 @@ Set "safe_to_auto_reply": true ONLY if ALL of the following are true:
 Otherwise, set "safe_to_auto_reply": false.
 
 """
-
+#school/fundraiser request would be uts own category
 def classify_email(email_body, model="gpt-4o-mini"):
   response = client.chat.completions.create(
     model=model,
@@ -63,16 +63,12 @@ def classify_email(email_body, model="gpt-4o-mini"):
       {"role": "system", "content": SYSTEM_PROMPT},
       {"role": "user", "content": email_body}
     ],
-    temperature=0.0, # Low temperature for deterministic classification
+    temperature=0.5, # Low temperature for deterministic classification
     response_format={"type": "json_object"}
   )
   return json.loads(response.choices[0].message.content)
 
 if __name__ == "__main__":
-
-  waterfront_email = load_email_from_file("emails/waterfront_thread.txt")
-  result = classify_email(waterfront_email)
-  print(json.dumps(result, indent=2))
   test_emails = [
     {
       "text": "Hi, I'd like to book your truck for a wedding on May 15th. We expect 100 guests.",
@@ -104,4 +100,15 @@ if __name__ == "__main__":
     }
   ]
 
+  # Run the waterfront email file
+  waterfront_email = load_email_from_file("emails/waterfront_thread.txt")
+  result = classify_email(waterfront_email)
+  print("\n--- waterfront_thread.txt ---")
+  print(json.dumps(result, indent=2))
+
+# Run the hardcoded test
+for i, item in enumerate(test_emails, start=1):
+  result = classify_email(item["text"])
+  print(f"/n--- Test {i} (expected category: {item['expected']}) ---")
+  print(json.dumps(result, indent=2))
 

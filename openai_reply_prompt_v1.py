@@ -21,9 +21,13 @@ Respond to the customer’s initial catering inquiry with a polite, professional
 3. Clearly mentions base pricing ($16+ tax per guest).
 4. Invites the customer to review the attached menu and reach out with any questions.
 
+
 CONDITIONAL LOGIC
 - If the customer has NOT provided a guest count, you may ask exactly ONE question requesting the estimated guest count.
+- When asking for guest count, use this phrasing exactly (do not reword):
+  "Are you able to send me an estimated guest count?"
 - If a guest count IS already provided, do NOT ask any questions.
+- Do NOT use phrasing like "could you provide", "please provide", or "can you provide".
 
 GUEST COUNT DETECTION (IMPORTANT)
 - Treat these as the same thing: guest count, guests, attendees, attendance, headcount, people.
@@ -53,8 +57,10 @@ TONE AND STYLE
 OUTPUT FORMAT
 - Write a complete email.
 - Include a greeting, body, and sign-off.
-- Do not include a subject line.
+- Do not include a subject line. 
 """
+
+# will need to create a subject line and start a new thread, not a reply on first email
 
 def generate_catering_response(user_inquiry, model="gpt-4o-mini"):
   response = client.chat.completions.create(
@@ -63,7 +69,7 @@ def generate_catering_response(user_inquiry, model="gpt-4o-mini"):
       {"role": "system", "content": SYSTEM_PROMPT},
       {"role": "user", "content": user_inquiry}
     ],
-    temperature=0.7, # Slightly higher for more natural tone
+    temperature=0.5, # Slightly higher for more natural tone
   )
   return response.choices[0].message.content
 
@@ -180,10 +186,10 @@ if __name__ == "__main__":
 #   reply = generate_catering_response(test_inquiry4)
 #   print(f"--- Draft Reply ---\n{reply}") # passed
 
-#   print(f"--- Incoming Email ---\n{test_inquiry5}\n")
+  print(f"--- Incoming Email ---\n{test_inquiry5}\n")
   
-#   reply = generate_catering_response(test_inquiry5)
-#   print(f"--- Draft Reply ---\n{reply}") # passed
+  reply = generate_catering_response(test_inquiry5)
+  print(f"--- Draft Reply ---\n{reply}") # passed
 
 #   print(f"--- Incoming Email ---\n{test_inquiry6}\n")
   
@@ -205,10 +211,10 @@ if __name__ == "__main__":
 #   reply = generate_catering_response(test_inquiry9)
 #   print(f"--- Draft Reply ---\n{reply}")
 
-#   print(f"--- Incoming Email ---\n{test_inquiry10}\n")
+  print(f"--- Incoming Email ---\n{test_inquiry10}\n")
   
-#   reply = generate_catering_response(test_inquiry10)
-#   print(f"--- Draft Reply ---\n{reply}") # passed
+  reply = generate_catering_response(test_inquiry10)
+  print(f"--- Draft Reply ---\n{reply}") # passed
 
   print(f"--- Incoming Email ---\n{test_inquiry11}\n")
   
